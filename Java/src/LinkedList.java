@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Stack;
 
 class ListNode{
@@ -5,6 +6,17 @@ class ListNode{
     ListNode next;
     ListNode(int val){
         this.val = val;
+    }
+}
+
+class Node{
+    int val;
+    Node next;
+    Node random;
+    Node(int val){
+        this.val = val;
+        this.next = null;
+        this.random = null;
     }
 }
 
@@ -17,6 +29,15 @@ public class LinkedList {
             temp = temp.next;
         }
         System.out.println();
+    }
+
+    public static void print2(Node head){
+        while(head!=null){
+
+            System.out.println("["+head.val+","+(head.random != null ? head.random.val : 0)+"]");
+            head = head.next;
+
+        }
     }
 
     public static int getLength(ListNode head){
@@ -274,26 +295,104 @@ public class LinkedList {
         return dummy.next;
     }
 
+    public static ListNode rotate(ListNode head){
+        ListNode end = head;
+        while(end.next.next!=null){
+            end = end.next;
+        }
+        ListNode newHead = end.next;
+        end.next = null;
+        newHead.next = head;
+
+        return newHead;
+    }
+
+    public static ListNode leftRotate(ListNode head,int k){
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        int len = getLength(head);
+        k = k % len;
+        for(int i=0;i<k;i++){
+            dummy.next = rotate(dummy.next);
+        }
+
+        return dummy.next;
+    }
+
+    public static Node copyRandomList(Node head) {
+        HashMap<Node,Node> nodes = new HashMap<>();
+
+        Node temp = head;
+        while(temp != null){
+            Node newNode = new Node(temp.val);
+            nodes.put(temp,newNode);
+            temp = temp.next;
+        }
+
+        temp = head;
+
+        while(temp!=null){
+            Node current = nodes.get(temp);
+            current.next = nodes.get(temp.next);
+            current.random = temp.random != null ? nodes.get(temp.random) : null;
+            temp = temp.next;
+        }
+
+        Node newHead = nodes.get(head);
+
+        return newHead;
+
+    }
+
+    public static ListNode removeElements(ListNode head, int val) {
+        if(head == null){
+            return null;
+        }
+        if(head.next == null && head.val == val){
+            return null;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode temp = dummy;
+
+        while(temp!=null && temp.next!=null){
+            print(dummy.next);
+            if(temp.next.val == val){
+                if(temp.next.next!=null){
+                    temp.next = temp.next.next;
+                }else{
+                    temp.next = null;
+                    break;
+                }
+            } else {
+                temp = temp.next;
+            }
+        }
+
+        return dummy.next;
+    }
+
     public static void main(String[] args){
         ListNode n1 = new ListNode(1);
         ListNode n2 = new ListNode(2);
-        ListNode n3 = new ListNode(3);
-        ListNode n4 = new ListNode(4);
-        ListNode n5 = new ListNode(5);
+        ListNode n3 = new ListNode(6);
+        ListNode n4 = new ListNode(3);
+        ListNode n5 = new ListNode(4);
+        ListNode n6 = new ListNode(5);
+        ListNode n7 = new ListNode(6);
+
 
         n1.next = n2;
         n2.next = n3;
         n3.next = n4;
         n4.next = n5;
+        n5.next = n6;
+        n6.next = n7;
 
-        ListNode head = n1;
 
-        head = reverseBetween(head,2,4);
+        ListNode head = removeElements(n1,6);
+
         print(head);
-
-
-
-
 
     }
 }
