@@ -1,7 +1,7 @@
-import org.w3c.dom.ls.LSOutput;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import com.johncsinclair.consoletable.ConsoleTable;
 
 class Student{
     int threshold = 45;
@@ -25,11 +25,11 @@ class Student{
         System.out.print("Student ID : "+this.id);
         System.out.print("Marks Scored : "+this.marks);
     }
-    boolean isPassed(){
+    String isPassed(){
         if(this.marks >= threshold ){
-            return true;
+            return "Passed";
         }
-        return false;
+        return "Failed";
     }
     String grade(){
         if(marks >= 95){
@@ -43,13 +43,20 @@ class Student{
         }else if(marks >= 45){
             return "D";
         }else{
-            return "Failed";
+            return "E";
         }
     }
 }
 
 public class LearningProject1 {
-
+    private static void getAllData(ArrayList<Student> students){
+        ConsoleTable table = new ConsoleTable();
+        table.setHeaders("-ID", "-Name", "Marks","-Grade","Status");
+        for(Student s : students) {
+            table.addRow(s.id, s.name, s.marks, s.grade(),s.isPassed());
+        }
+        System.out.println(table);
+    }
 
     public static void main(String[] args){
         ArrayList<Student> students = new ArrayList<>();
@@ -58,19 +65,20 @@ public class LearningProject1 {
         int numOfStudent = sc.nextInt();
         System.out.println();
         for(int i=0;i<numOfStudent;i++){
+            // Get Student ID
             System.out.print("Enter Student id :");
             int id = sc.nextInt();
             sc.nextLine();
-            System.out.println();
+            // Get Student Name
             System.out.print("Enter Student name :");
             String name = sc.nextLine();
-            System.out.println();
+            // Get Marks
             System.out.print("Enter marks :");
             double marks = sc.nextDouble();
-            System.out.println();
-
+            // Create the Object and Add to students list.
             Student st = new Student(name,id,marks);
             students.add(st);
+            System.out.println();
         }
 
         boolean exit = false;
@@ -83,15 +91,17 @@ public class LearningProject1 {
             System.out.println("3 - Search by Name");
             System.out.println("4 - Show grading criteria");
             
-            System.out.println("Please make a choice :");
+            System.out.print("Please make a choice :");
             int choice = sc.nextInt();
+            sc.nextLine();
 
             switch (choice){
                 case 0 :
                     exit = true;
                     break;
                 case 1 :
-                    System.out.println("You chose 1");
+                    // Display all students in table format
+                    getAllData(students);
                     break;
                 case 2 :
                     System.out.println("You chose 2");
@@ -106,6 +116,7 @@ public class LearningProject1 {
                     System.out.println("Invalid choice");
                     break;
             }
+            System.out.println();
         }
         System.out.println("========== Shutting down ==========");
     }
